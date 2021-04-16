@@ -110,3 +110,35 @@ console.log(counter(decrease));
 
 //JavaScript는 public, private, protected같은 접근 제한자를 제공하지 않는다.
 //객체의 모든 프로퍼티와 메소드는 기본적으로 public이다.
+
+//클로져의 자주 발생하는 실수
+var funcs = [];
+for (var i = 0; i < 3; i++) {
+    funcs[i] = function () { return i; };
+}
+for (var j = 0; j < funcs.length; j++) {
+    console.log(funcs[j]());
+}
+//var키워드로 선언했기에 전역변수로 할당된다. 전역변수를 참조하여 3만 나온다.
+var funcs = [];
+
+for (var i = 0; i < 3; i++) {
+    funcs[i] = (function (id) {
+        return function () {
+            return id;
+        };
+    }(i));
+}
+for (var j = 0; j < funcs.length; j++) {
+    console.log(funcs[j]());
+}
+
+//var키워드로 사용하지 않는 ES6의 반복문은 ㅗ드블록을 반복 실행할 대마다 새로운 렉시컬 환경을 생성. 
+//이때 반복문의 코드블록 내부에 함수정의가 없는경우 반복문이 생성하는 렉시컬 환경은 반복 직후, 참조하지 않기 때문에 가비지컬렉션의 대상이 된다.
+const funcs = [];
+for(let i =0; i<3; i++){
+    funcs[i] = function(){return i;};
+}
+for (let i=0; i<funcs.length;i++){
+    console.log(funcs[i]());
+}
